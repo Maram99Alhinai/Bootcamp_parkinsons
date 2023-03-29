@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+	<title>Form Example</title>
 </head>
 <body>
-    <form action="/action_page.php">
-        <label>MDVP:Fo(Hz):</label><br>
+	<h1>Enter a number:</h1>
+	<form method="POST" action="/process">
+		<label>MDVP:Fo(Hz):</label><br>
         <input type="number" id="MDVP:Fo" name="MDVP:Fo"><br>
         <label>MDVP:Fhi(Hz)</label><br>
         <input type="number" id="MDVP:Fhi" name="MDVP:Fhi"><br>
@@ -56,10 +54,7 @@
         <input type="number" id="D2" name="D2"><br>
         <label>PPE</label><br>
         <input type="number" id="PPE" name="PPE"><br>
-
-        
-        <input type="submit" value="Submit">
-        <input type="reset">
-      </form>
+		<input type="submit" value="Submit">
+	</form>
 </body>
 </html>
