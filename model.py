@@ -1,26 +1,29 @@
-#Read the data
-import pandas as pd
-df=pd.read_csv('parkinsons.data')
-
-
-#Get the X and y 
-y = df.loc[:,'status']
-X = df.drop(['status', 'name'], axis=1)
-
-
-#Train and fit the model 
-from sklearn.naive_bayes import GaussianNB
-clf = GaussianNB()
-clf.fit(X, y)
-
-#test the model
+from flask import Blueprint, render_template, request, current_app
+from keras.models import load_model
+from PIL import Image
 import numpy as np
-testSample=np.array([1,2,3,4,3,4,4,4,4,4,4,4,4,4,4,4,4,4,9,9,7,7])
-dfTest = pd.DataFrame(testSample.reshape(1,-1), columns=['MDVP:Fo(Hz)', 'MDVP:Fhi(Hz)', 'MDVP:Flo(Hz)', 'MDVP:Jitter(%)', 
-                                                         'MDVP:Jitter(Abs)', 'MDVP:RAP', 'MDVP:PPQ', 'Jitter:DDP',      
-                                                         'MDVP:Shimmer', 'MDVP:Shimmer(dB)', 'Shimmer:APQ3', 'Shimmer:APQ5',      
-                                                         'MDVP:APQ', 'Shimmer:DDA', 'NHR', 'HNR', 'RPDE', 'DFA',       'spread1', 
-                                                         'spread2', 'D2', 'PPE'])
+import os
 
-testSample_pred = clf.predict(dfTest)
-print(testSample_pred)
+model = Blueprint('model', __name__)
+classifier = load_model('classifier1.h5')
+
+@model.route('/', methods=['GET', 'POST'])
+def home():
+    if request.method == 'POST':
+        image = request.files.get('image')
+        if image:
+            new_image_path = os.path.join(current_app.root_path,'images',image.filename)
+            image.save(new_image_path)
+            
+            def preprocess_img(image_path):
+                new_image = Image.open(image_path).convert("RGB")
+                new_image = new_image.resize((128, 128))
+                new_image_array = np.array(new_image)
+                new_image_array = np.expand_dims(new_image_array, axis=0)
+                new_image_array = new_image_array.astype('float32') / 255.0
+                return new_image_array
+            
+            prediction = classifier.predict(preprocess_img(new_image_path))
+            return render_template("home.html", prediction=prediction)
+            
+    return render_template("home.html")

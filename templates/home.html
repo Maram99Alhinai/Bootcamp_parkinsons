@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+
+    <h1>Upload an Image</h1>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <label for="image">Select an image to upload:</label>
+        <input type="file" name="image" id="image" accept="image/*" required>
+        <br>
+        <input type="submit" value="Upload Image">
+    </form>
+
+	{% if prediction %}
+    <h2>Prediction Value:</h2>
+    <p>{{ prediction }}</p>
+    {% endif %}
+
+</body>
+</html>
