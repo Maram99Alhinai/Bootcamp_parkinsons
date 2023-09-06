@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Form Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F1F1F1;
+        }
+        form {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        input[type="number"] {
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 5px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        input[type="submit"], input[type="reset"] {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        input[type="submit"]:hover, input[type="reset"]:hover {
+            background-color: #3E8E41;
+        }
+    </style>
+</head>
+<body>
+	<h1>Enter a number:</h1>
+	<form method="POST">
+		<label>MDVP:Fo(Hz):</label><br>
+        <input type="number"  step="any"  id="MDVP:Fo" name="MDVP:Fo"><br>
+
+        <label>MDVP:Flo(Hz):</label><br>
+        <input type="number" step="any" id="MDVP:Flo" name="MDVP:Flo"><br>
+
+        <label>MDVP:Jitter(%)</label><br>
+        <input type="number" step="any"  id="MDVP:Jitter" name="MDVP:Jitter"><br>
+
+        <label>MDVP:Jitter(Abs):</label><br>
+        <input type="number" step="any" id="MDVP:Jitter(Abs)" name="MDVP:Jitter(Abs)"><br>
+        
+        <label>MDVP:Shimmer:</label><br>
+        <input type="number" step="any" id="MDVP:Shimmer" name="MDVP:Shimmer"><br>
+
+        <label>RPDE:</label><br>
+        <input type="number" step="any" id="RPDE" name="RPDE"><br>
+        
+        <label>DFA:</label><br>
+        <input type="number" step="any" id="DFA" name="DFA"><br>
+        
+        <label>spread1:</label><br>
+        <input type="number" id="spread1" name="spread1"><br>
+        
+        <label>spread2:	</label><br>
+        <input type="number" id="spread2" name="spread2"><br>
+        
+        
+        <label>D2:</label><br>
+        <input type="number" id="D2" name="D2"><br>
+        
+        <label>PPE</label><br>
+        <input type="number" id="PPE" name="PPE"><br>
+
+		<input type="submit" value="Submit">
+	</form>
+    {% if prediction %}
+    <h2>Prediction Value:</h2>
+    <p>{{ prediction }}</p>
+    {% endif %}
+</body>
+</html>
