@@ -1,91 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>Form Example</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #F1F1F1;
-        }
-        form {
-            background-color: #fff;
-            border-radius: 5px;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        input[type="number"] {
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            padding: 5px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        input[type="submit"], input[type="reset"] {
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 3px;
-            padding: 10px;
-            cursor: pointer;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        input[type="submit"]:hover, input[type="reset"]:hover {
-            background-color: #3E8E41;
-        }
-    </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>try1 page</title>
+    <link rel="icon" type="image/x-icon" href="static/assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Google fonts-->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,600;1,600&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,300;0,500;0,600;0,700;1,300;1,500;1,600;1,700&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,400;1,400&amp;display=swap" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="static/css/styles.css" rel="stylesheet" />
 </head>
-<body>
-	<h1>Enter a number:</h1>
-	<form method="POST">
-		<label>MDVP:Fo(Hz):</label><br>
-        <input type="number"  step="any"  id="MDVP:Fo" name="MDVP:Fo"><br>
-
-        <label>MDVP:Flo(Hz):</label><br>
-        <input type="number" step="any" id="MDVP:Flo" name="MDVP:Flo"><br>
-
-        <label>MDVP:Jitter(%)</label><br>
-        <input type="number" step="any"  id="MDVP:Jitter" name="MDVP:Jitter"><br>
-
-        <label>MDVP:Jitter(Abs):</label><br>
-        <input type="number" step="any" id="MDVP:Jitter(Abs)" name="MDVP:Jitter(Abs)"><br>
-        
-        <label>MDVP:Shimmer:</label><br>
-        <input type="number" step="any" id="MDVP:Shimmer" name="MDVP:Shimmer"><br>
-
-        <label>RPDE:</label><br>
-        <input type="number" step="any" id="RPDE" name="RPDE"><br>
-        
-        <label>DFA:</label><br>
-        <input type="number" step="any" id="DFA" name="DFA"><br>
-        
-        <label>spread1:</label><br>
-        <input type="number" id="spread1" name="spread1"><br>
-        
-        <label>spread2:	</label><br>
-        <input type="number" id="spread2" name="spread2"><br>
-        
-        
-        <label>D2:</label><br>
-        <input type="number" id="D2" name="D2"><br>
-        
-        <label>PPE</label><br>
-        <input type="number" id="PPE" name="PPE"><br>
-
-		<input type="submit" value="Submit">
-	</form>
-    {% if prediction %}
-    <h2>Prediction Value:</h2>
-    <p>{{ prediction }}</p>
-    {% endif %}
-</body>
+<body id="page-top">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top shadow-sm" id="mainNav">
+        <div class="container px-5">
+            <a class="navbar-brand fw-bold" href="{{ url_for('model.home') }}">ParkiCareAi</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="bi-list"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto me-4 my-3 my-lg-0">
+                    <li class="nav-item"><a class="nav-link me-lg-3" href="{{ url_for('model.pred1') }}">Model1</a></li>
+                    <li class="nav-item"><a class="nav-link me-lg-3" href="{{ url_for('model.pred2') }}">Model2</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Form section-->
+    <section class="form-section">
+        <div class="container px-5">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="container mt-5">
+                        <div class="row">
+                            <div class="col-md-6 offset-md-3">
+                                <div class="mb-3">
+                                    <h2 class="display-7 text-center">Please Enter the Following Values:</h2>
+                                </div>
+                                <form method="POST" class="shadow p-4 blue-border" >                  
+                                    <div class="mb-3">
+                                        <label>MDVP:Fo(Hz):</label>
+                                        <input type="number" class="form-control" id="MDVP:Fo" name="MDVP:Fo" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>MDVP:Flo(Hz):</label>
+                                        <input type="number" class="form-control" id="MDVP:Flo" name="MDVP:Flo" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>MDVP:Jitter(%):</label>
+                                        <input type="number" class="form-control" id="MDVP:Jitter" name="MDVP:Jitter" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>MDVP:Jitter(Abs):</label>
+                                        <input type="number" class="form-control" id="MDVP:Jitter(Abs)" name="MDVP:Jitter(Abs)" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>MDVP:Shimmer:</label>
+                                        <input type="number" class="form-control" id="MDVP:Shimmer" name="MDVP:Shimmer" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>RPDE:</label>
+                                        <input type="number" class="form-control" id="RPDE" name="RPDE" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>DFA:</label>
+                                        <input type="number" class="form-control" id="DFA" name="DFA" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>spread1:</label>
+                                        <input type="number" class="form-control" id="spread1" name="spread1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>spread2:	</label>
+                                        <input type="number" class="form-control" id="spread2" name="spread2" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>D2:</label>
+                                        <input type="number" class="form-control" id="D2" name="D2" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>PPE:</label>
+                                        <input type="number" class="form-control" id="PPE" name="PPE" required>
+                                    </div>
+                                    <div class="mb-3 text-center">
+                                        <button type="submit" class="btn btn-success btn-lg">Submit</button>
+                                    </div>
+                                    <div class="mb-3 text-center">
+                                        {% if prediction %}
+                                        <h2>Prediction:</h2>
+                                        <p>{{ prediction }}</p>
+                                        {% endif %}
+                                    </div>                                  
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+        <footer class="bg-black text-center py-3">
+            <div class="container px-5">
+                <div class="text-white-50 small">
+                    <div class="mb-2">&copy;All Rights Reserved.</div>
+                </div>
+            </div>
+        </footer>
+     
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <!-- * *                               SB Forms JS                               * *-->
+        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
+        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    </body>
 </html>

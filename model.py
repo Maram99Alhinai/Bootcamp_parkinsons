@@ -75,7 +75,12 @@ def pred2():
 
             processed_df = process_single_image(new_image_path)
             predictions = loaded_rf_model.predict(processed_df )
-            return render_template("pred2.html", prediction=predictions)
+            if predictions == 0:
+                predictions="Healthy"
+                return render_template("pred2.html",prediction=predictions)
+            else:
+                predictions='You May have Parkinson. Please visit your doctor to be sure'
+                return render_template("pred2.html",prediction=predictions)
             
     return render_template("pred2.html")
 
@@ -114,7 +119,7 @@ def pred1():
             predictions="Healthy"
             return render_template("pred1.html",prediction=predictions)
         else:
-            predictions='You May have Parkinson '
+            predictions='You May have Parkinson. Please visit your doctor to be sure'
             return render_template("pred1.html",prediction=predictions)
           
     return render_template("pred1.html")
