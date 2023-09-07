@@ -16,66 +16,39 @@ model = Blueprint('model', __name__)
 def home():      
     return render_template("home.html")
 
-
-with open('rf_model.pickle', 'rb') as model_file:
-    loaded_rf_model = pickle.load(model_file)
-
 @model.route('/try2', methods=['GET', 'POST'])
 def pred2():
     if request.method == 'POST':
+        model_filename = 'rf_model_wave.joblib'  # Replace with the correct filename
+        loaded_model = joblib.load(model_filename)
         image = request.files.get('image')
         if image:
             new_image_path = os.path.join(current_app.root_path,'images',image.filename)
             image.save(new_image_path)
-            def process_single_image(image_path):
-                # Load and preprocess the image
-                img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-                img = cv2.resize(img, (512, 242))
-                thresh_img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-                clean_img = closing(thresh_img > 0, disk(1))
+            def process_new_image(new_image_path):
+                new_image = read_and_thresh(new_image_path, resize=False)
 
-                # Calculate stroke thickness
-                thickness = stroke_thickness(clean_img)
-                mean_thickness = np.mean(thickness)
-                std_thickness = np.std(thickness)
+                # Compute the same interaction features as during training
+                mean_thickness = np.mean(stroke_thickness(closing(label_sort(new_image) > 0, disk(1))))
+                std_thickness = np.std(stroke_thickness(closing(label_sort(new_image) > 0, disk(1))))
+                num_pixels = sum_pixels(skeleton_drawing(new_image))
+                num_ep = number_of_end_points(new_image, k_nn)
+                num_inters = number_of_intersection_points(new_image, k_nn)
 
-                # Calculate number of pixels, end points, and intersection points
-                num_pixels = np.sum(clean_img)
-                num_ep = number_of_end_points(clean_img, k_nn)
-                num_inters = number_of_intersection_points(clean_img, k_nn)
+                # Create a feature array matching the training data
+                new_features = np.array([
+                    mean_thickness, std_thickness, num_pixels, num_ep, num_inters,
+                    mean_thickness * std_thickness, mean_thickness * num_pixels, mean_thickness * num_ep, mean_thickness * num_inters,
+                    std_thickness * num_pixels, std_thickness * num_ep, std_thickness * num_inters,
+                    num_pixels * num_ep, num_pixels * num_inters, num_ep * num_inters
+                ]).reshape(1, -1)
 
-                # Calculate interactions between features
-                interactions = {
-                    'mean_thickness_std_thickness': mean_thickness * std_thickness,
-                    'mean_thickness_num_pixels': mean_thickness * num_pixels,
-                    'mean_thickness_num_ep': mean_thickness * num_ep,
-                    'mean_thickness_num_inters': mean_thickness * num_inters,
-                    'std_thickness_num_pixels': std_thickness * num_pixels,
-                    'std_thickness_num_ep': std_thickness * num_ep,
-                    'std_thickness_num_inters': std_thickness * num_inters,
-                    'num_pixels_num_ep': num_pixels * num_ep,
-                    'num_pixels_num_inters': num_pixels * num_inters,
-                    'num_ep_num_inters': num_ep * num_inters
-                }
-
-                # Create a DataFrame with the processed features
-                feature_data = {
-                    'mean_thickness': mean_thickness,
-                    'std_thickness': std_thickness,
-                    'num_pixels': num_pixels,
-                    'num_ep': num_ep,
-                    'num_inters': num_inters,
-                    **interactions  # Include interactions in the DataFrame
-                }
-
-                df = pd.DataFrame([feature_data])
-
-                return df
+                return new_features
+            new_features = process_new_image(new_image_path)
 
 
-            processed_df = process_single_image(new_image_path)
-            predictions = loaded_rf_model.predict(processed_df )
-            if predictions == 0:
+            predicted_probabilities = loaded_model.predict_proba(new_features)
+            if predicted_probabilities[0][1] < 0.87:
                 predictions="Healthy"
                 return render_template("pred2.html",prediction=predictions)
             else:
@@ -85,10 +58,11 @@ def pred2():
     return render_template("pred2.html")
 
 
-loaded_model = joblib.load('logistic_regression_model.pkl')
+
 @model.route('/try1', methods=['GET', 'POST'])
 def pred1():
     if request.method == 'POST':
+        loaded_model = joblib.load('logistic_regression_model.pkl')
         MDVP1 = request.form.get('MDVP:Fo')
         MDVP2 = request.form.get('MDVP:Flo')
         MDVP3 = request.form.get('MDVP:Jitter')
@@ -115,7 +89,7 @@ def pred1():
         'PPE': [float(PPE)],}
         input_series = pd.DataFrame(data).squeeze()
         predicted_class = loaded_model.predict([input_series])
-        if predicted_class == 0:
+        if predicted_class < 0.5:
             predictions="Healthy"
             return render_template("pred1.html",prediction=predictions)
         else:
