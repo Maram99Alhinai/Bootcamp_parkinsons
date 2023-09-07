@@ -30,7 +30,7 @@ def pred2():
             def process_single_image(image_path):
                 # Load and preprocess the image
                 img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
-                img = cv2.resize(img, (512, 242))
+                # img = cv2.resize(img, (512, 242))
                 thresh_img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
                 clean_img = closing(thresh_img > 0, disk(1))
 
@@ -115,7 +115,7 @@ def pred1():
         'PPE': [float(PPE)],}
         input_series = pd.DataFrame(data).squeeze()
         predicted_class = loaded_model.predict([input_series])
-        if predicted_class == 0:
+        if predicted_class < 0.5:
             predictions="Healthy"
             return render_template("pred1.html",prediction=predictions)
         else:
