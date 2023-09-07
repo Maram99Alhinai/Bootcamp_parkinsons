@@ -72,7 +72,4 @@ data_dir = Path(r'drawings')
 activity = 'wave'
 
 X_train, X_test, y_train, y_test, lb = process_data(data_dir, activity)
-print(X_test.columns)
-print(y_test)
-print(lb)
 train_and_evaluate_rf(X_train, X_test, y_train, y_test, lb)

@@ -1,4 +1,10 @@
-opencv-python
-scikit-image
-pandas
+flask
+joblib
+joblib
+keras
 matplotlib
+numpy
+opencv-python
+pandas
+scikit-image
+scikit-learn
